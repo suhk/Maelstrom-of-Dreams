@@ -1,14 +1,18 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
-
+Project("{C0A7CE9B-B34A-6973-F8B5-64E01EE445B2}") = "Maelstrom of Dreams", "Assembly-CSharp.csproj", "{8D9AC31F-BAC3-3A1F-978C-B1EAF4C6FC95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-
+		{8D9AC31F-BAC3-3A1F-978C-B1EAF4C6FC95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D9AC31F-BAC3-3A1F-978C-B1EAF4C6FC95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D9AC31F-BAC3-3A1F-978C-B1EAF4C6FC95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D9AC31F-BAC3-3A1F-978C-B1EAF4C6FC95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
