@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{7D9E7EF5-304C-F321-E99D-D34F9D9C2569}") = "Maelstrom-of-Dreams", "Assembly-CSharp.csproj", "{EEAD7BB3-BD52-1366-E5F8-488843D5BF8D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEAD7BB3-BD52-1366-E5F8-488843D5BF8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEAD7BB3-BD52-1366-E5F8-488843D5BF8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEAD7BB3-BD52-1366-E5F8-488843D5BF8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEAD7BB3-BD52-1366-E5F8-488843D5BF8D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
