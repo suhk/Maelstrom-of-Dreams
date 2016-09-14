@@ -5,25 +5,76 @@ using System.Collections.Generic;
 public class PlatformController : RaycastController {
 
 	public LayerMask passengerMask;
-	public Vector3 move;
+
+	public Vector3[] localWaypoints;
+	Vector3[] globalWaypoints;
+
+	public bool cyclic;
+	public float speed;
+	public float waitTime;
+	[Range(0, 2)]
+	public float easeAmount;
+
+	int fromWaypointIndex;
+	float percentBetweenWaypoints;
+	float nextMoveTime;
 
 	List<PassengerMovement> passengerMovement;
 	Dictionary<Transform, Controller2D> passengerDictionary = new Dictionary<Transform, Controller2D>();
 
 	public override void Start() {
 		base.Start();
+		globalWaypoints = new Vector3[localWaypoints.Length];
+		for(int i = 0; i < localWaypoints.Length; i += 1) {
+			globalWaypoints[i] = localWaypoints[i] + transform.position;
+		}
 	}
 
 	void Update() {
 		UpdateRaycastOrigins();
 
-		Vector3 velocity = move * Time.deltaTime;
+		Vector3 velocity = CalculatePlatformMovement();
 
 		CalculatePassengerMovement(velocity);
 
 		MovePassengers(true);
 		transform.Translate(velocity);
 		MovePassengers(false);
+	}
+
+	float Ease(float x) {
+		float a = easeAmount + 1;
+		return Mathf.Pow(x, a) / (Mathf.Pow(x, a) + Mathf.Pow(1 - x, a));
+	}
+
+	Vector3 CalculatePlatformMovement() {
+		if(Time.time < nextMoveTime) {
+			return Vector3.zero;
+		}
+
+		fromWaypointIndex %= globalWaypoints.Length;
+		int toWaypointIndex = (fromWaypointIndex + 1) % globalWaypoints.Length;
+		float distanceBetweenWaypoints = Vector3.Distance(globalWaypoints[fromWaypointIndex], globalWaypoints[toWaypointIndex]);
+		percentBetweenWaypoints += Time.deltaTime * speed / distanceBetweenWaypoints;
+		percentBetweenWaypoints = Mathf.Clamp01(percentBetweenWaypoints);
+		float easedPercentBetweenWaypoints = Ease(percentBetweenWaypoints);
+
+		Vector3 newPos = Vector3.Lerp(globalWaypoints[fromWaypointIndex], globalWaypoints[toWaypointIndex], easedPercentBetweenWaypoints);
+
+		if(percentBetweenWaypoints >= 1) {
+			percentBetweenWaypoints = 0;
+			fromWaypointIndex += 1;
+
+			if(!cyclic) {
+				if(fromWaypointIndex >= globalWaypoints.Length - 1) {
+					fromWaypointIndex = 0;
+					System.Array.Reverse(globalWaypoints);
+				}
+			}
+			nextMoveTime = Time.time + waitTime;
+		}
+
+		return newPos - transform.position;
 	}
 
 	void MovePassengers(bool beforeMovePlatform) {
@@ -53,7 +104,7 @@ public class PlatformController : RaycastController {
 				rayOrigin += Vector2.right * (verticalRaySpacing * i);
 				RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, passengerMask);
 
-				if(hit) {
+				if(hit && directionY == 1) {
 					if(!movedPassengers.Contains(hit.transform)) {
 						movedPassengers.Add(hit.transform);
 
@@ -124,6 +175,19 @@ public class PlatformController : RaycastController {
 			velocity = _velocity;
 			standingOnPlatform = _standingOnPlatform;
 			moveBeforePlatform = _moveBeforePlatform;
+		}
+	}
+
+	void OnDrawGizmos() {
+		if(localWaypoints != null) {
+			Gizmos.color = Color.red;
+			float size = .3f;
+
+			for(int i = 0; i < localWaypoints.Length; i += 1) {
+				Vector3 globalWayPointPos = (Application.isPlaying) ? globalWaypoints[i] : localWaypoints[i] + transform.position;
+				Gizmos.DrawLine(globalWayPointPos - Vector3.up * size, globalWayPointPos + Vector3.up * size);
+				Gizmos.DrawLine(globalWayPointPos - Vector3.left * size, globalWayPointPos + Vector3.left * size);
+			}
 		}
 	}
 }
