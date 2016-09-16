@@ -46,6 +46,10 @@ public class Controller2D : RaycastController {
 			Debug.DrawRay(rayOrigin, Vector2.up * directionY * rayLength, Color.cyan);
 
 			if(hit) {
+				if(hit.collider.tag == "Through" && (directionY == 1 || hit.distance == 0)) {
+					continue;
+				}
+
 				velocity.y = (hit.distance - skinWidth) * directionY;
 				rayLength = hit.distance;
 
